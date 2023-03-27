@@ -1,3 +1,5 @@
+import tkinter as tk
+
 questions = {
     1: {
         "pregunta": "¿Prefieres trabajar en equipo o en solitario?",
@@ -102,22 +104,25 @@ questions = {
 
 }
 
-for key, value in questions.items():
+options_label_text = ["Opción 1", "Opción 2", "Opción 3", "Opción 4"]
+options_label_selected = ['0', '0', '0', '0']
 
-    print("")
+# for key, value in questions.items():
 
-    print(f'{key} - {value["pregunta"]}')
+#     print("")
 
-    for option, point in zip(value["opciones"], value["puntos"]):
+#     print(f'{key} - {value["pregunta"]}')
 
-        print(f"{option} - {point}")
+#     for option, point in zip(value["opciones"], value["puntos"]):
 
-    # print(f'{value["opciones"]} - {value["puntos"]}')
+#         print(f"{option} - {point}")
 
-    # for option in value["opciones"]:
-    #     for point in value["puntos"]:
+#     # print(f'{value["opciones"]} - {value["puntos"]}')
 
-    #         print(f"{option} - {point}")
+#     # for option in value["opciones"]:
+#     #     for point in value["puntos"]:
 
-    # for option in value["opciones"]:
-    #     print(option)
+#     #         print(f"{option} - {point}")
+
+#     # for option in value["opciones"]:
+#     #     print(option)
