@@ -102,5 +102,31 @@ questions = {
 
 }
 
-options_label_text = ["Opción 1", "Opción 2", "Opción 3", "Opción 4"]
-options_label_selected = ['0', '0', '0', '0']
+questions_size = len(questions)
+
+welcome_message = "\n¡Bienvenido a Decide tu destino!\n\n Esta aplicación te ayudará a determinar qué carrera universitaria se adapta más \n a tus intereses y habilidades. A continuación, te haremos una serie de preguntas\n utilizando metáforas para que puedas reflexionar sobre tus preferencias y \n motivaciones. Es importante que respondas de forma honesta y sin prejuicios para \n el resultado sea lo más preciso posible. Una vez que hayas completado las \n preguntas, te diremos qué carrera es la que más se ajusta a tus respuestas. \n\n ¡Empecemos!"
+
+questions_colors = ["#da1e37", "#52b788", "#4361ee", "#ffd60a"]
+
+carrers = {
+    "Abogado": {"min": 22, "max": 26},
+    "Administración": {"min": 16, "max": 20},
+    "Arquitectura": {"min": 27, "max": 31},
+    "Artes Visuales para la Expresión Fotográfica": {"min": 22, "max": 26},
+    "Artes Visuales para la Expresión Plástica": {"min": 22, "max": 26},
+    "Biología": {"min": 27, "max": 31},
+    "Ciencias y Artes Culinarias": {"min": 22, "max": 26},
+    "Contaduría Pública": {"min": 16, "max": 20},
+    "Cultura Física y Deportes": {"max": 16},
+    "Diseño para la Comunicación Gráfica": {"min": 22, "max": 26},
+    "Enfermería": {"min": 27, "max": 31},
+    "Ingeniería Civil": {"min": 27, "max": 31},
+    "Ingeniería en Computación": {"min": 22, "max": 26},
+    "Ingeniería en Comunicación Multimedia": {"min": 22, "max": 26},
+    "Ingeniería en Telemática": {"min": 22, "max": 26},
+    "Ingeniería en Videojuegos": {"min": 22, "max": 26},
+    "Médico Cirujano y Partero": {"min": 27, "max": 31},
+    "Nutrición": {"min": 22, "max": 26},
+    "Psicología": {"min": 27, "max": 31},
+    "Turismo": {"max": 16}
+}
