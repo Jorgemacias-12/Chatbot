@@ -1,10 +1,12 @@
 import tkinter as tk
 
 from tkinter.font import *
+from tkinter import *
 
 from src.constants.data import questions
 from src.constants.data import questions_size
 from src.constants.data import questions_colors
+
 
 class QuestionPageWindow(tk.Tk):
 
@@ -15,16 +17,23 @@ class QuestionPageWindow(tk.Tk):
     title_font = None
 
     panel_image = None
-    
-    counter = 0
 
-    def __init__(self, question_index):
+    question_index = 1
+    question_counter = None
+
+    question = None
+
+    question_options = [None] * 4
+
+    total_points = 0
+
+    canvas = [None] * 4
+
+    def __init__(self):
 
         super().__init__()
 
-        self.question_index = question_index
-
-        self.title(f"Pregunta {question_index}")
+        self.title(f"Questionario - pregunta {self.question_index}")
         self.resizable(False, False)
         x_pos = (self.winfo_screenwidth() // 2) - (self.window_width // 2)
         y_pos = (self.winfo_screenheight() // 2) - (self.window_height // 2)
@@ -39,37 +48,18 @@ class QuestionPageWindow(tk.Tk):
         self.geometry(
             f"{self.window_width}x{self.window_height}+{x_pos}+{y_pos}")
 
-    def get_question(self, index):
-
-        question = None
-        question = questions.get(index)
-        question = question["pregunta"]
-
-        return question
-
-    def get_options(self, index):
-
-        options = None
-        options = questions.get(index)
-        options = options["opciones"]
-
-        return options
-    
-    def get_points(self, index):
-
-        points = None
-        points = questions.get(index)
-        points = points["puntos"]
-
-        return points
-
-    def choice(self, point):
-
-        self.counter += point
-        
-        self.destroy()
-
     def init_components(self):
+
+        # Área para cargar valores por defecto
+        self.question = StringVar()
+        self.question.set(self.get_question(self.question_index))
+
+        self.question_counter = StringVar()
+        self.question_counter.set(
+            f"\tPregunta {self.question_index}/{questions_size}")
+
+        self.question_options = [StringVar() for _ in range(4)]
+        self.canvas = [tk.Canvas() for _ in range(4)]
 
         # Logo
         self.logo = tk.PhotoImage(file="./resources/logo.png").subsample(2)
@@ -78,37 +68,113 @@ class QuestionPageWindow(tk.Tk):
 
         # Pregunta
         Lbl_question = tk.Label(
-            self, text=self.get_question(self.question_index))
+            self, textvariable=self.question)
         Lbl_question.config(foreground="#6209be", font=self.default_font)
         Lbl_question.pack()
 
+        # Contenedor para las opciones
         self.panel_image = tk.PhotoImage(file="./resources/panel_bg.png")
+        self.panel = tk.Label(self, image=self.panel_image)
+        self.panel.pack()
 
-        panel = tk.Label(self, image=self.panel_image)
-        panel.pack()
+        # Mostrar las opciones para la pregunta
+        for index, (option, point) in enumerate(zip(self.get_options(self.question_index), self.get_points(self.question_index))):
+            
+            # modificar el valor de las opciones disponibles
+            self.question_options[index].set(option)
+
+            # Usar canvas para emular un checkbox
+            self.canvas[index] = tk.Canvas(self.panel, width=30, height=30)
+            self.canvas[index].place(x=100, y=80 + index * 50)
+            
+            self.canvas[index].create_oval(5, 5, 25, 25, fill=questions_colors[index])
+
+            # Inicializar variable para actualizar valor en update 
+            Btn_option = tk.Button(self.panel, textvariable=self.question_options[index])
+            Btn_option.config(
+                bg=questions_colors[index], fg="white", font=self.counter_font, padx=20)
+            Btn_option.config(command=lambda points=point: self.choice(points))
+            Btn_option.place(x=150, y=80 + index * 50)
 
         # Contador de preguntas (wtf thegrefg reference)
         Lbl_questionCounter = tk.Label(
-            self, text=f"\tPregunta {self.question_index}/{questions_size}")
+            self, textvariable=self.question_counter)
         Lbl_questionCounter.config(
             foreground="#6209be", font=self.counter_font)
         Lbl_questionCounter.pack(anchor=tk.SW)
 
-        # Obtener los puntos 
-        # points = self.get_points(self.question_index)
+        # Botones para cambiar entre preguntas
+        Btn_next = tk.Button(self, text=">")
+        Btn_next.config(command=self.next_question)
+        Btn_next.pack(side="right")
 
-        # Mostrar las opciones para responder a la pregunta
-        for index, (option, point) in enumerate(zip(self.get_options(self.question_index), self.get_points(self.question_index))):
+        Btn_prev = tk.Button(self, text="<")
+        Btn_prev.config(command=self.prev_question)
+        Btn_prev.pack(side="left")
+    
+    def choice(self, point):
 
-            canvas = tk.Canvas(panel, width=30, height=30)
-            canvas.place(x=100, y=80 + index * 50)
+        self.total_points += point
 
-            canvas.create_oval(5, 5, 25, 25, fill=questions_colors[index])
+        if self.question_index == 20:
 
-            Btn_option = tk.Button(panel, text=option)
-            Btn_option.config(bg=questions_colors[index], fg="white", font=self.counter_font, padx=20)
-            Btn_option.config(command= lambda points = point: self.choice(points))
-            Btn_option.place(x=150, y=80 + index * 50)
+            raise NotImplementedError(" Calcular resultados en el formulario de resultados")
+
+        if self.question_index < questions_size:
+            
+            self.question_index += 1
+
+        self.update_view()
+
+
+    def update_view(self):
         
-    def get_current_points(self):
-        return self.counter
+        # Titulo del formulario
+        self.title(f"Questionario - pregunta {self.question_index}")
+
+        # Pregunta actual
+        self.question.set(self.get_question(self.question_index))        
+
+        # Opciones de la pregunta (repuestas)
+        for index, option in enumerate(self.get_options(self.question_index)):
+
+            # Respuestas
+            self.question_options[index].set(option)
+
+            # Ovalos correspondiente a la respuesta
+            self.canvas[index].delete()
+            self.canvas[index] = tk.Canvas(self.panel, width=30, height=30)
+            self.canvas[index].create_oval(5, 5, 25, 25, fill=questions_colors[index])
+            self.canvas[index].place(x=100, y=80 + index * 50)
+
+
+        # Contador de la pregunta
+        self.question_counter.set(f"\tPregunta {self.question_index}/{questions_size}")
+
+    def next_question(self):
+
+        if self.question_index < questions_size:
+            self.question_index += 1
+            self.update_view()
+
+    def prev_question(self):
+
+        if self.question_index > 1:
+            self.question_index -= 1
+            self.update_view()
+
+    def get_question(self, index):
+
+        return questions.get(index)["pregunta"]
+
+    def get_options(self, index):
+
+        return questions.get(index)["opciones"]
+
+    def get_points(self, index):
+
+        return questions.get(index)["puntos"]
+
+    def get_total_points(self):
+
+        return self.total_points
