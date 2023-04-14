@@ -3,9 +3,11 @@ import tkinter as tk
 from tkinter.font import *
 from tkinter import *
 
+from src.gui.results import ResultsWindow
 from src.constants.data import questions
 from src.constants.data import questions_size
 from src.constants.data import questions_colors
+from src.constants.data import button_fg, button_bg, button_font
 
 
 class QuestionPageWindow(tk.Tk):
@@ -26,6 +28,8 @@ class QuestionPageWindow(tk.Tk):
     question_options = [None] * 4
 
     total_points = 0
+
+    responses = [False] * 20
 
     canvas = [None] * 4
 
@@ -79,18 +83,20 @@ class QuestionPageWindow(tk.Tk):
 
         # Mostrar las opciones para la pregunta
         for index, (option, point) in enumerate(zip(self.get_options(self.question_index), self.get_points(self.question_index))):
-            
+
             # modificar el valor de las opciones disponibles
             self.question_options[index].set(option)
 
             # Usar canvas para emular un checkbox
             self.canvas[index] = tk.Canvas(self.panel, width=30, height=30)
             self.canvas[index].place(x=100, y=80 + index * 50)
-            
-            self.canvas[index].create_oval(5, 5, 25, 25, fill=questions_colors[index])
 
-            # Inicializar variable para actualizar valor en update 
-            Btn_option = tk.Button(self.panel, textvariable=self.question_options[index])
+            self.canvas[index].create_oval(
+                5, 5, 25, 25, fill=questions_colors[index])
+
+            # Inicializar variable para actualizar valor en update
+            Btn_option = tk.Button(
+                self.panel, textvariable=self.question_options[index])
             Btn_option.config(
                 bg=questions_colors[index], fg="white", font=self.counter_font, padx=20)
             Btn_option.config(command=lambda points=point: self.choice(points))
@@ -104,36 +110,45 @@ class QuestionPageWindow(tk.Tk):
         Lbl_questionCounter.pack(anchor=tk.SW)
 
         # Botones para cambiar entre preguntas
-        Btn_next = tk.Button(self, text=">")
-        Btn_next.config(command=self.next_question)
+        Btn_next = tk.Button(self, text=">", fg=button_fg,
+                             bg=button_bg, font=button_font)
+        Btn_next.config(command=self.next_question,
+                        anchor="center", padx=50, pady=30)
         Btn_next.pack(side="right")
 
-        Btn_prev = tk.Button(self, text="<")
-        Btn_prev.config(command=self.prev_question)
+        Btn_prev = tk.Button(self, text="<", fg=button_fg,
+                             bg=button_bg, font=button_font)
+        Btn_prev.config(command=self.prev_question, padx=50, pady=30)
         Btn_prev.pack(side="left")
-    
+
     def choice(self, point):
+
+        if self.question_index == 20 and not False in self.responses:
+
+            self.destroy()
+
+            results_window = ResultsWindow(self.total_points)
+            results_window.mainloop()
+
+            return
 
         self.total_points += point
 
-        if self.question_index == 20:
-
-            raise NotImplementedError(" Calcular resultados en el formulario de resultados")
+        self.responses[self.question_index - 1] = True
 
         if self.question_index < questions_size:
-            
+
             self.question_index += 1
 
         self.update_view()
 
-
     def update_view(self):
-        
+
         # Titulo del formulario
         self.title(f"Questionario - pregunta {self.question_index}")
 
         # Pregunta actual
-        self.question.set(self.get_question(self.question_index))        
+        self.question.set(self.get_question(self.question_index))
 
         # Opciones de la pregunta (repuestas)
         for index, option in enumerate(self.get_options(self.question_index)):
@@ -144,12 +159,13 @@ class QuestionPageWindow(tk.Tk):
             # Ovalos correspondiente a la respuesta
             self.canvas[index].delete()
             self.canvas[index] = tk.Canvas(self.panel, width=30, height=30)
-            self.canvas[index].create_oval(5, 5, 25, 25, fill=questions_colors[index])
+            self.canvas[index].create_oval(
+                5, 5, 25, 25, fill=questions_colors[index])
             self.canvas[index].place(x=100, y=80 + index * 50)
 
-
         # Contador de la pregunta
-        self.question_counter.set(f"\tPregunta {self.question_index}/{questions_size}")
+        self.question_counter.set(
+            f"\tPregunta {self.question_index}/{questions_size}")
 
     def next_question(self):
 
@@ -174,7 +190,3 @@ class QuestionPageWindow(tk.Tk):
     def get_points(self, index):
 
         return questions.get(index)["puntos"]
-
-    def get_total_points(self):
-
-        return self.total_points
