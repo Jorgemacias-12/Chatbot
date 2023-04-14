@@ -64,14 +64,10 @@ class ChatbotWindow(tk.Tk):
 
         self.destroy()
         
-        points = 0
-
-        for i in range(questions_size):
-            
-            question_window = QuestionPageWindow(i + 1)
-            question_window.mainloop()
-            points += question_window.get_current_points()
-        
+        # Invocar el formulario que contiene las preguntas
+        question_window = QuestionPageWindow()
+        question_window.mainloop()
+        points = question_window.get_curent_points()
 
         results_window = ResultsWindow(points)
         results_window.mainloop()
