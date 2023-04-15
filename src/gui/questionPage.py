@@ -123,8 +123,8 @@ class QuestionPageWindow(tk.Tk):
 
     def choice(self, point):
 
-        if self.question_index == 20 and not False in self.responses:
-
+        if self.question_index == 20 and not False in self.responses:            
+            
             self.destroy()
 
             results_window = ResultsWindow(self.total_points)
@@ -157,7 +157,6 @@ class QuestionPageWindow(tk.Tk):
             self.question_options[index].set(option)
 
             # Ovalos correspondiente a la respuesta
-            self.canvas[index].delete()
             self.canvas[index] = tk.Canvas(self.panel, width=30, height=30)
             self.canvas[index].create_oval(
                 5, 5, 25, 25, fill=questions_colors[index])
