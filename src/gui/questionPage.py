@@ -88,19 +88,19 @@ class QuestionPageWindow(tk.Tk):
             self.question_options[index].set(option)
 
             # Usar canvas para emular un checkbox
-            self.canvas[index] = tk.Canvas(self.panel, width=30, height=30)
-            self.canvas[index].place(x=100, y=80 + index * 50)
+            self.canvas[index] = tk.Canvas(self, width=30, height=30)
+            self.canvas[index].place(x=100, y=100 + index * 50)
 
             self.canvas[index].create_oval(
                 5, 5, 25, 25, fill=questions_colors[index])
 
             # Inicializar variable para actualizar valor en update
-            Btn_option = tk.Button(
-                self.panel, textvariable=self.question_options[index])
-            Btn_option.config(
-                bg=questions_colors[index], fg="white", font=self.counter_font, padx=20)
-            Btn_option.config(command=lambda points=point: self.choice(points))
-            Btn_option.place(x=150, y=80 + index * 50)
+            Lbl_option = tk.Label(
+                self, textvariable=self.question_options[index])
+            Lbl_option.config(
+                bg=questions_colors[index], fg="white", font=self.counter_font, padx=20, cursor="hand2")
+            Lbl_option.bind("<Button-1>", lambda event, points=point: self.choice(points))
+            Lbl_option.place(x=150, y=100 + index * 50)
 
         # Contador de preguntas (wtf thegrefg reference)
         Lbl_questionCounter = tk.Label(
@@ -157,10 +157,12 @@ class QuestionPageWindow(tk.Tk):
             self.question_options[index].set(option)
 
             # Ovalos correspondiente a la respuesta
-            self.canvas[index] = tk.Canvas(self.panel, width=30, height=30)
+            self.canvas[index] = tk.Canvas(self, width=30, height=30)
             self.canvas[index].create_oval(
                 5, 5, 25, 25, fill=questions_colors[index])
-            self.canvas[index].place(x=100, y=80 + index * 50)
+            self.canvas[index].place(x=100, y=100 + index * 50)
+
+            # self.()
 
         # Contador de la pregunta
         self.question_counter.set(
