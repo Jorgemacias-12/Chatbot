@@ -1,7 +1,7 @@
 import tkinter as tk
+import random
 
 from tkinter.font import *
-
 from src.constants.data import questions_colors
 from src.constants.data import carrers
 
@@ -28,9 +28,11 @@ class ResultsWindow(tk.Tk):
         # Guardar puntos totales
         self.total_points = total_points
 
+        print(self.total_points)
+
         # Definir fuentes por defecto
         self.default_font = Font(family='Arial', size=12, weight='normal')
-        self.title_font = Font(family='Arial', size=24, weight='bold')
+        self.title_font = Font(family='Arial', size=20, weight='bold')
         self.counter_font = Font(family='Arial', size=12, weight='bold')
 
         self.init_components()
@@ -40,52 +42,38 @@ class ResultsWindow(tk.Tk):
 
     def calculate_carrer(self):
         
-        valid_carrers = []
-        min_diff = float("inf")
-        suggested_carrer = None
+        """
+            Intentar mejorar el algoritmo de calculo, para tener encuenta lo siguiente
 
-        for carrer, score in carrers.items():
+                * La opción elegida en algunas preguntas es crucial para recomendar una
+                 carrrera, por lo que, necesitaremos una forma de almacenar aquellas opcion
+                 es de las preguntas clave para empezar a implementar un filtro especial
+        """
 
-            if "min" in score and self.total_points >= score["min"]:
+        carrers_to_suggest = []
 
-                if "max" in score and self.total_points <= score["max"] or "max" not in score:
+        for carrer, requriement in carrers.items():
 
-                    valid_carrers.append(carrer)
+            if "min" in requriement and "max" in requriement:
 
-                    print(f"{carrer} added to valid careers")
+                carrers_to_suggest.append(carrer)
 
-        if not valid_carrers: 
-            return "Ninguna carrera coincide con la canitdad de puntos obtenida"
+            if "min" in requriement and self.total_points >= requriement["min"]:
+
+                carrers_to_suggest.append(carrer)
+            
+            if "max" in requriement and self.total_points <= requriement["max"]:
+
+                carrers_to_suggest.append(carrer)
         
-
-        if len(valid_carrers) == 1:
-            return valid_carrers[0]
-
-        for carrer in valid_carrers:
-
-            score = carrers[carrer]
-
-            diff = abs(self.total_points - score["min"])
-
-            print(f"{carrer} difference: {diff}")
-
-            if diff < min_diff:
-                
-                suggested_carrer = carrer
-                min_diff = diff
-
-        
-        if suggested_carrer is None:
-            return "No hay carrera existente para tí"
-
-        return suggested_carrer
+        return random.choice(carrers_to_suggest)
 
     def init_components(self):
 
-        print("Si")
-
         # Calcular carrera a sugerir en base a puntuaje total
         suggested_carrer = self.calculate_carrer()
+
+        # print(suggested_carrer)
 
         # Label de explicación
         Lbl_response = tk.Label(
@@ -101,4 +89,5 @@ class ResultsWindow(tk.Tk):
         Lbl_suggestion = tk.Label(self, text=f"¡{suggested_carrer}!")
         Lbl_suggestion.config(
             foreground=questions_colors[0], font=self.title_font)
-        Lbl_suggestion.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        
+        Lbl_suggestion.place(relx=.5, rely=.3, anchor="center")
