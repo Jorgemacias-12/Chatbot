@@ -3,7 +3,9 @@ name: Build and Release on Tag
 on:
   push:
     tags:
-      - "*"
+      - 'v*' # solo los tags que comienzan con 'v'
+    branches:
+      - main # solo la rama main
 
 jobs:
   build-and-release:
