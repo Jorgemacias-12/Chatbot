@@ -1,7 +1,9 @@
-name: Build an Release on Tag
+name: Build and Release on Tag
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -29,24 +31,24 @@ jobs:
       env:
         PYTHONPATH: ${{ env.PYTHONPATH }}
     
-    - name: Create release
+    - name: Create Release
       id: create_release
       uses: actions/create-release@v1
+      if: github.event_name == 'push' && github.ref_type == 'tag'
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && replace(github.ref, 'refs/tags/v', '') }}
+        release_name: Release ${{ startsWith(github.ref, 'refs/tags/v') && replace(github.ref, 'refs/tags/v', '') }}
         body: |
-          Release ${{ github.ref }}
+          Release ${{ startsWith(github.ref, 'refs/tags/v') && replace(github.ref, 'refs/tags/v', '') }}
         draft: false
         prerelease: false
-        inputs:
-          tag_name: ${{ github.ref }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
+      if: github.event_name == 'push' && github.ref_type == 'tag'
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/Orientador_Vocacional_CUCOSTA_${{ inputs.tag_name }}
