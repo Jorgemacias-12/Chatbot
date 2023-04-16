@@ -79,7 +79,7 @@ class ResultsWindow(tk.Tk):
         Lbl_response = tk.Label(
             self, text="¡La carrera recomendada para tí es:")
         Lbl_response.config(foreground='#6209be', font=self.counter_font)
-        Lbl_response.pack()
+        Lbl_response.pack(pady=10)
 
         self.panel_image = tk.PhotoImage(file="./resources/panel_bg.png")
 
@@ -91,3 +91,16 @@ class ResultsWindow(tk.Tk):
             foreground=questions_colors[0], font=self.title_font)
         
         Lbl_suggestion.place(relx=.5, rely=.3, anchor="center")
+
+        Btn_start = tk.Button(self, text="Ir al inicio", bg="#ef476f", fg="white", cursor="hand2", font=("Arial", 16, "bold"))
+        Btn_start.config(command=self.go_to_main_screen)
+        Btn_start.pack(pady=30, side="bottom")
+
+    def go_to_main_screen(self):
+        
+        from src.gui.chatbot import ChatbotWindow
+
+        self.destroy()
+
+        chatbot_window = ChatbotWindow()
+        chatbot_window.mainloop()
