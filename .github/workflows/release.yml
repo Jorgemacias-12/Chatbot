@@ -26,7 +26,7 @@ jobs:
     
     - name: Build with PyInstaller
       run: |
-        pyinstaller -n "Orientador Vocacional CUCOSTA ${{ inputs.tag_name }}" --add-data "resources;resources" --noconsole __main__.py
+        pyinstaller -n "Orientador Vocacional CUCOSTA" --add-data "resources;resources" --noconsole --onefile  __main__.py
         xcopy resources dist\resources /s /i /y
       env:
         PYTHONPATH: ${{ env.PYTHONPATH }}
