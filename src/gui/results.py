@@ -28,8 +28,6 @@ class ResultsWindow(tk.Tk):
         # Guardar puntos totales
         self.total_points = total_points
 
-        print(self.total_points)
-
         # Definir fuentes por defecto
         self.default_font = Font(family='Arial', size=12, weight='normal')
         self.title_font = Font(family='Arial', size=20, weight='bold')
@@ -41,7 +39,7 @@ class ResultsWindow(tk.Tk):
             f"{self.window_width}x{self.window_height}+{x_pos}+{y_pos}")
 
     def calculate_carrer(self):
-        
+    
         """
             Intentar mejorar el algoritmo de calculo, para tener encuenta lo siguiente
 

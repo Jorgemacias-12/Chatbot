@@ -41,6 +41,7 @@ class QuestionPageWindow(tk.Tk):
         super().__init__()
 
         self.title(f"Questionario - pregunta {self.question_index}")
+
         self.resizable(False, False)
         x_pos = (self.winfo_screenwidth() // 2) - (self.window_width // 2)
         y_pos = (self.winfo_screenheight() // 2) - (self.window_height // 2)
@@ -67,6 +68,7 @@ class QuestionPageWindow(tk.Tk):
 
         self.question_options = [StringVar() for _ in range(4)]
         self.canvas = [tk.Canvas() for _ in range(4)]
+
 
         # Logo
         self.logo = tk.PhotoImage(file="./resources/logo.png").subsample(2)
@@ -108,10 +110,11 @@ class QuestionPageWindow(tk.Tk):
         # Contador de preguntas (wtf thegrefg reference)
         Lbl_questionCounter = tk.Label(
             self, textvariable=self.question_counter)
+            
         Lbl_questionCounter.config(
             foreground="#6209be", font=self.counter_font)
         Lbl_questionCounter.pack(anchor=tk.SW)
-
+        
         # Botones para cambiar entre preguntas
         Btn_next = tk.Button(self, text=">", fg=button_fg,
                              bg=button_bg, font=button_font)
