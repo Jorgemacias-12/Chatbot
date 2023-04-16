@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter.font import *
 from src.gui.results import ResultsWindow
 from src.gui.questionPage import QuestionPageWindow
-from src.constants.data import questions_size, welcome_message
+from src.constants.data import welcome_message
 
 
 
@@ -64,14 +64,6 @@ class ChatbotWindow(tk.Tk):
 
         self.destroy()
         
-        points = 0
-
-        for i in range(questions_size):
-            
-            question_window = QuestionPageWindow(i + 1)
-            question_window.mainloop()
-            points += question_window.get_current_points()
-        
-
-        results_window = ResultsWindow(points)
-        results_window.mainloop()
+        # Invocar el formulario que contiene las preguntas
+        question_window = QuestionPageWindow()
+        question_window.mainloop()
