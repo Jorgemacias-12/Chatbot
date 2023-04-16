@@ -130,3 +130,7 @@ carrers = {
     "Psicología": {"min": 27, "max": 31},
     "Turismo": {"max": 16}
 }
+
+button_bg = "#00f5d4"
+button_fg = "black"
+button_font = ("Arial", 14, "bold")
