@@ -14,9 +14,10 @@ class QuestionPageWindow(tk.Tk):
 
     window_width = 800
     window_height = 520
-
     default_font = None
     title_font = None
+    
+    option_indicator_row_start = 150
 
     panel_image = None
 
@@ -29,7 +30,9 @@ class QuestionPageWindow(tk.Tk):
 
     total_points = 0
 
-    responses = [False] * 20
+    responses = [False] * 19
+
+    internal_counter = 0
 
     canvas = [None] * 4
 
@@ -73,7 +76,7 @@ class QuestionPageWindow(tk.Tk):
         # Pregunta
         Lbl_question = tk.Label(
             self, textvariable=self.question)
-        Lbl_question.config(foreground="#6209be", font=self.default_font)
+        Lbl_question.config(foreground="#6209be", font=("Arial", 16, "bold"), pady=10)
         Lbl_question.pack()
 
         # Contenedor para las opciones
@@ -89,7 +92,7 @@ class QuestionPageWindow(tk.Tk):
 
             # Usar canvas para emular un checkbox
             self.canvas[index] = tk.Canvas(self, width=30, height=30)
-            self.canvas[index].place(x=100, y=100 + index * 50)
+            self.canvas[index].place(x=100, y=self.option_indicator_row_start + index * 50)
 
             self.canvas[index].create_oval(
                 5, 5, 25, 25, fill=questions_colors[index])
@@ -100,7 +103,7 @@ class QuestionPageWindow(tk.Tk):
             Lbl_option.config(
                 bg=questions_colors[index], fg="white", font=self.counter_font, padx=20, cursor="hand2")
             Lbl_option.bind("<Button-1>", lambda event, points=point: self.choice(points))
-            Lbl_option.place(x=150, y=100 + index * 50)
+            Lbl_option.place(x=150, y=self.option_indicator_row_start + index * 50)
 
         # Contador de preguntas (wtf thegrefg reference)
         Lbl_questionCounter = tk.Label(
@@ -122,8 +125,8 @@ class QuestionPageWindow(tk.Tk):
         Btn_prev.pack(side="left")
 
     def choice(self, point):
-
-        if self.question_index == 20 and not False in self.responses:            
+    
+        if self.question_index >= questions_size:
             
             self.destroy()
 
@@ -132,15 +135,12 @@ class QuestionPageWindow(tk.Tk):
 
             return
 
-        self.total_points += point
-
-        self.responses[self.question_index - 1] = True
-
-        if self.question_index < questions_size:
-
-            self.question_index += 1
-
-        self.update_view()
+        
+        if self.question_index <= questions_size:
+            
+            self.total_points += point
+            self.question_index +=  1
+            self.update_view()
 
     def update_view(self):
 
@@ -160,9 +160,7 @@ class QuestionPageWindow(tk.Tk):
             self.canvas[index] = tk.Canvas(self, width=30, height=30)
             self.canvas[index].create_oval(
                 5, 5, 25, 25, fill=questions_colors[index])
-            self.canvas[index].place(x=100, y=100 + index * 50)
-
-            # self.()
+            self.canvas[index].place(x=100, y=self.option_indicator_row_start + index * 50)
 
         # Contador de la pregunta
         self.question_counter.set(
