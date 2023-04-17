@@ -36,6 +36,9 @@ class QuestionPageWindow(tk.Tk):
 
     canvas = [None] * 4
 
+    button_prev_bg = None
+    button_next_bg = None
+
     def __init__(self):
 
         super().__init__()
@@ -115,15 +118,18 @@ class QuestionPageWindow(tk.Tk):
             foreground="#6209be", font=self.counter_font)
         Lbl_questionCounter.pack(anchor=tk.SW)
         
+        # Cargar iconos de los botones
+        self.button_next_bg = tk.PhotoImage(file="./resources/button_next.png")
+        self.button_prev_bg = tk.PhotoImage(file="./resources/button_prev.png")
+
         # Botones para cambiar entre preguntas
-        Btn_next = tk.Button(self, text=">", fg=button_fg,
-                             bg=button_bg, font=button_font)
+        Btn_next = tk.Button(self, image=self.button_next_bg, borderwidth=0, highlightthickness=0)
         Btn_next.config(command=self.next_question,
                         anchor="center", padx=50, pady=30)
         Btn_next.pack(side="right")
 
-        Btn_prev = tk.Button(self, text="<", fg=button_fg,
-                             bg=button_bg, font=button_font)
+        Btn_prev = tk.Button(self, image=self.button_prev_bg,
+                             borderwidth=0, highlightthickness=0)
         Btn_prev.config(command=self.prev_question, padx=50, pady=30)
         Btn_prev.pack(side="left")
 
