@@ -35,6 +35,7 @@ jobs:
 
     - name: Copy resources and compress app
       run: |
+        mkdir dist/resources
         xcopy "resources" "dist\resources"
         Compress-Archive dist/ "dist/Orientador Vocacional CUCOSTA" 
     
