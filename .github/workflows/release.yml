@@ -36,7 +36,7 @@ jobs:
     - name: Copy resources and compress app
       run: |
         mkdir dist/resources
-        xcopy "resources" "dist\resources"
+        xcopy "resources" "dist\resources" /E /I /Y
         Compress-Archive dist/ "dist/Orientador Vocacional CUCOSTA" 
     
     - name: Show contents of the folder
