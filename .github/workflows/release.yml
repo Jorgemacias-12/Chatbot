@@ -10,7 +10,6 @@ on:
 jobs:
   build-and-release:
     name: Release
-    if: github.event.name == 'Release' && github.event.action == 'created'
     permissions: write-all
     runs-on: windows-latest
     steps:
