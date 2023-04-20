@@ -37,7 +37,7 @@ jobs:
       run: |
         mkdir dist/resources
         xcopy "resources" "dist\resources" /E /I /Y
-        Compress-Archive dist/ "dist/Orientador Vocacional CUCOSTA" 
+        Compress-Archive dist/ "dist/Orientador_Vocacional_CUCOSTA" 
     
     - name: Show contents of the folder
       run: |
