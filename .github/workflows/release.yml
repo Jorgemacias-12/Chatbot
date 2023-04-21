@@ -63,7 +63,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: dist/Orientador_Vocacional_CUCOSTA.zip 
-        asset_name: Orientador_Vocacional_CUCOSTA 
+        asset_name: Orientador_Vocacional_CUCOSTA.zip 
         asset_content_type: application/zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
