@@ -2,7 +2,8 @@ import tkinter as tk
 from src.utils.logging import LoggingTkClass
 
 from tkinter.font import *
-from tkinter import *
+from tkinter import StringVar
+from tkinter import messagebox
 
 from src.gui.results import ResultsWindow
 from src.constants.data import questions
@@ -31,7 +32,7 @@ class QuestionPageWindow(LoggingTkClass):
 
     total_points = 0
 
-    responses = [False] * 19
+    responses = []
 
     internal_counter = 0
 
@@ -141,20 +142,25 @@ class QuestionPageWindow(LoggingTkClass):
         self.logger.info(f"choice ha sido invocado con valores: {point}")
         self.logger.info(f"El índice actual es {self.question_index}")
 
+        self.logger.info(f"¿Todas las respuestas han sido contestadas? {all(self.responses)}")
+
+        if len(self.responses) >= 1:
+            messagebox.showwarning("¡Aviso!", "Hay preguntas por contestar, para continuar conteste la anterior")
+            return
+
         if self.question_index >= questions_size:
             
             self.destroy()
-
             results_window = ResultsWindow(self.total_points)
             results_window.mainloop()
 
             return
-
         
         if self.question_index <= questions_size:
             
             self.total_points += point
             self.question_index +=  1
+            self.logger.info(f"Valor de lista: {self.responses}")
             self.update_view()
 
     def update_view(self):
@@ -186,14 +192,18 @@ class QuestionPageWindow(LoggingTkClass):
     def next_question(self):
 
         if self.question_index < questions_size:
+            self.responses.append(True)
             self.question_index += 1
             self.update_view()
+            self.logger.info(f"next_question invocado -> {self.responses}")
 
     def prev_question(self):
 
         if self.question_index > 1:
+            self.responses.pop()
             self.question_index -= 1
             self.update_view()
+            self.logger.info(f"next_question invocado -> {self.responses}")
 
     def get_question(self, index):
 
