@@ -1,12 +1,14 @@
 import tkinter as tk
 import random
 
+from src.utils.logging import LoggingTkClass
+
 from tkinter.font import *
 from src.constants.data import questions_colors
 from src.constants.data import carrers
 
 
-class ResultsWindow(tk.Tk):
+class ResultsWindow(LoggingTkClass):
 
     window_width = 800
     window_height = 520
@@ -37,6 +39,8 @@ class ResultsWindow(tk.Tk):
 
         self.geometry(
             f"{self.window_width}x{self.window_height}+{x_pos}+{y_pos}")
+        
+        self.logger.info(f"{__name__} ha sido invocado!")
 
     def calculate_carrer(self):
     
@@ -64,6 +68,8 @@ class ResultsWindow(tk.Tk):
 
                 carrers_to_suggest.append(carrer)
         
+        self.logger.info(f"Se ha calculado la carrera exitosamente")
+
         return random.choice(carrers_to_suggest)
 
     def init_components(self):
@@ -102,3 +108,5 @@ class ResultsWindow(tk.Tk):
 
         chatbot_window = ChatbotWindow()
         chatbot_window.mainloop()
+
+        self.logger.info("Se ha regresado al menú principal")

@@ -1,4 +1,5 @@
 import tkinter as tk
+from src.utils.logging import LoggingTkClass
 
 from tkinter.font import *
 from src.gui.results import ResultsWindow
@@ -8,7 +9,7 @@ from src.constants.data import welcome_message
 
 
 
-class ChatbotWindow(tk.Tk):
+class ChatbotWindow(LoggingTkClass):
 
     window_width = 800
     window_height = 520
@@ -39,6 +40,8 @@ class ChatbotWindow(tk.Tk):
 
         self.geometry(
             f"{self.window_width}x{self.window_height}+{x_pos}+{y_pos}")
+        
+        self.logger.info(f"Llamada a __init__ en {__name__}")
 
     def init_components(self):
 
@@ -59,6 +62,7 @@ class ChatbotWindow(tk.Tk):
                                highlightthickness=0, command=self.invoke_next_form)
         Btn_invoke.grid(row=3, column=0, columnspan=2,
                         padx=10, pady=10, sticky="S")
+        
 
     def invoke_next_form(self):
 
@@ -67,3 +71,5 @@ class ChatbotWindow(tk.Tk):
         # Invocar el formulario que contiene las preguntas
         question_window = QuestionPageWindow()
         question_window.mainloop()
+
+        self.logger.info(f"Se ha inicializado el questionario")

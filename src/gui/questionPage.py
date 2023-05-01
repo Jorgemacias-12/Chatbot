@@ -1,4 +1,5 @@
 import tkinter as tk
+from src.utils.logging import LoggingTkClass
 
 from tkinter.font import *
 from tkinter import *
@@ -10,7 +11,7 @@ from src.constants.data import questions_colors
 from src.constants.data import button_fg, button_bg, button_font
 
 
-class QuestionPageWindow(tk.Tk):
+class QuestionPageWindow(LoggingTkClass):
 
     window_width = 800
     window_height = 520
@@ -58,6 +59,8 @@ class QuestionPageWindow(tk.Tk):
 
         self.geometry(
             f"{self.window_width}x{self.window_height}+{x_pos}+{y_pos}")
+
+        self.logger.info(f"{__name__} se ha inicializado correctamente!")
 
     def init_components(self):
 
@@ -134,7 +137,10 @@ class QuestionPageWindow(tk.Tk):
         Btn_prev.pack(side="left")
 
     def choice(self, point):
-    
+        
+        self.logger.info(f"choice ha sido invocado con valores: {point}")
+        self.logger.info(f"El índice actual es {self.question_index}")
+
         if self.question_index >= questions_size:
             
             self.destroy()
@@ -174,6 +180,8 @@ class QuestionPageWindow(tk.Tk):
         # Contador de la pregunta
         self.question_counter.set(
             f"\tPregunta {self.question_index}/{questions_size}")
+        
+        self.logger.info(f"Se ha actualizado la vista con la pregunta #{self.question_index}")
 
     def next_question(self):
 
