@@ -145,7 +145,7 @@ class QuestionPageWindow(LoggingTkClass):
         self.logger.info(f"¿Todas las respuestas han sido contestadas? {all(self.responses)}")
 
         if len(self.responses) >= 1:
-            messagebox.showwarning("¡Aviso!", "Hay preguntas por contestar, para continuar conteste la anterior")
+            messagebox.showwarning("¡Aviso!", f"Hay {len(self.responses) + 1} preguntas por contestar, para continuar contestelas!")
             return
 
         if self.question_index >= questions_size:
