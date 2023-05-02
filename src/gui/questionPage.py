@@ -3,6 +3,7 @@ from src.utils.logging import LoggingTkClass
 
 from tkinter.font import *
 from tkinter import StringVar
+from tkinter import IntVar
 from tkinter import messagebox
 
 from src.gui.results import ResultsWindow
@@ -32,7 +33,7 @@ class QuestionPageWindow(LoggingTkClass):
 
     total_points = 0
 
-    responses = []
+    unanswered_questions = []
 
     internal_counter = 0
 
@@ -74,6 +75,7 @@ class QuestionPageWindow(LoggingTkClass):
             f"\tPregunta {self.question_index}/{questions_size}")
 
         self.question_options = [StringVar() for _ in range(4)]
+        self.answers_points = [IntVar() for _ in range(4)]
         self.canvas = [tk.Canvas() for _ in range(4)]
 
 
@@ -98,6 +100,7 @@ class QuestionPageWindow(LoggingTkClass):
 
             # modificar el valor de las opciones disponibles
             self.question_options[index].set(option)
+            self.answers_points[index].set(point)
 
             # Usar canvas para emular un checkbox
             self.canvas[index] = tk.Canvas(self, width=30, height=30)
@@ -107,12 +110,14 @@ class QuestionPageWindow(LoggingTkClass):
                 5, 5, 25, 25, fill=questions_colors[index])
 
             # Inicializar variable para actualizar valor en update
-            Lbl_option = tk.Label(
+            self.Lbl_option = tk.Label(
                 self, textvariable=self.question_options[index])
-            Lbl_option.config(
+            self.Lbl_option.config(
                 bg=questions_colors[index], fg="white", font=self.counter_font, padx=20, cursor="hand2")
-            Lbl_option.bind("<Button-1>", lambda event, points=point: self.choice(points))
-            Lbl_option.place(x=150, y=self.option_indicator_row_start + index * 50)
+            
+            self.Lbl_option.bind("<Button-1>", lambda event: self.choice(self.answers_points[index].get()))
+
+            self.Lbl_option.place(x=150, y=self.option_indicator_row_start + index * 50)
 
         # Contador de preguntas (wtf thegrefg reference)
         Lbl_questionCounter = tk.Label(
@@ -142,10 +147,11 @@ class QuestionPageWindow(LoggingTkClass):
         self.logger.info(f"choice ha sido invocado con valores: {point}")
         self.logger.info(f"El índice actual es {self.question_index}")
 
-        self.logger.info(f"¿Todas las respuestas han sido contestadas? {all(self.responses)}")
+        self.logger.info(f"Valores de puntos {[str(var.get()) for var in self.answers_points]}")
+        self.logger.info(f"Valores de respuestas acumuladas: {self.unanswered_questions}")
 
-        if len(self.responses) >= 1:
-            messagebox.showwarning("¡Aviso!", f"Hay {len(self.responses) + 1} preguntas por contestar, para continuar contestelas!")
+        if len(self.unanswered_questions) >= 1:
+            messagebox.showwarning("¡Aviso!", f"Hay {len(self.unanswered_questions) + 1} preguntas por contestar, para continuar contestelas!")
             return
 
         if self.question_index >= questions_size:
@@ -160,7 +166,7 @@ class QuestionPageWindow(LoggingTkClass):
             
             self.total_points += point
             self.question_index +=  1
-            self.logger.info(f"Valor de lista: {self.responses}")
+            self.logger.info(f"Valor de lista: {self.unanswered_questions}")
             self.update_view()
 
     def update_view(self):
@@ -172,16 +178,20 @@ class QuestionPageWindow(LoggingTkClass):
         self.question.set(self.get_question(self.question_index))
 
         # Opciones de la pregunta (repuestas)
-        for index, option in enumerate(self.get_options(self.question_index)):
+        for index, (option, point) in enumerate(zip(self.get_options(self.question_index), self.get_points(self.question_index))):
 
             # Respuestas
             self.question_options[index].set(option)
+            self.answers_points[index].set(point)
 
             # Ovalos correspondiente a la respuesta
             self.canvas[index] = tk.Canvas(self, width=30, height=30)
             self.canvas[index].create_oval(
                 5, 5, 25, 25, fill=questions_colors[index])
             self.canvas[index].place(x=100, y=self.option_indicator_row_start + index * 50)
+
+            self.Lbl_option.bind(
+                "<Button-1>", lambda event: self.choice(self.answers_points[index].get()))
 
         # Contador de la pregunta
         self.question_counter.set(
@@ -192,18 +202,18 @@ class QuestionPageWindow(LoggingTkClass):
     def next_question(self):
 
         if self.question_index < questions_size:
-            self.responses.append(True)
+            self.unanswered_questions.append(True)
             self.question_index += 1
             self.update_view()
-            self.logger.info(f"next_question invocado -> {self.responses}")
+            self.logger.info(f"next_question invocado -> {self.unanswered_questions}")
 
     def prev_question(self):
 
         if self.question_index > 1:
-            self.responses.pop()
+            self.unanswered_questions.pop()
             self.question_index -= 1
             self.update_view()
-            self.logger.info(f"next_question invocado -> {self.responses}")
+            self.logger.info(f"next_question invocado -> {self.unanswered_questions}")
 
     def get_question(self, index):
 
