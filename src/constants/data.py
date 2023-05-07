@@ -135,6 +135,7 @@ button_bg = "#00f5d4"
 button_fg = "black"
 button_font = ("Arial", 14, "bold")
 
+question_options_size = 4
 
 def get_question(index):
 
