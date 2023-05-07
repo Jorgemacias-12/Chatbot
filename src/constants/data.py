@@ -134,3 +134,18 @@ carrers = {
 button_bg = "#00f5d4"
 button_fg = "black"
 button_font = ("Arial", 14, "bold")
+
+question_options_size = 4
+
+def get_question(index):
+
+    return questions.get(index)["pregunta"]
+
+def get_options(index):
+
+    return questions.get(index)["opciones"]
+
+
+def get_points(index):
+
+    return questions.get(index)["puntos"]
